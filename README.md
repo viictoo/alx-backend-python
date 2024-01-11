@@ -2,7 +2,7 @@
 
 <ul>
 <li>
-<a href="https://github.com/viictoo/alx-backend-python/0x00-python_variable_annotations">
+<a href="https://github.com/viictoo/alx-backend-python/tree/main/0x00-python_variable_annotations">
 0x00-python_variable_annotations</a>
 </li>
 <li>0x01-python_async_function</li>

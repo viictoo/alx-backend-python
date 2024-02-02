@@ -12,23 +12,16 @@ get_json = __import__('utils').get_json
 memoize = __import__('utils').memoize
 
 
-class TestAccessNestedMap(TestCase):
-    """unittests for the access nested map function
-
-    Args:
-        TestCase (class): A class whose instances are single test cases.
-    """
-    @parameterized.expand([
-        ("root", {"a": 1}, ("a",), 1),
-        ("children", {"a": {"b": 2}}, ("a",), {'b': 2}),
-        ("last child", {"a": {"b": 2}}, ("a", "b"), 2),
-    ])
-    def test_access_nested_map(self,
-                               name: str,
-                               nested_map: Mapping,
-                               path: Sequence,
-                               expected: Any
-                               ) -> None:
-        """tests for access_nested_map method
-        """
-        self.assertEqual(accessMap(nested_map, path), expected)
+class TestAccessNestedMap(unittest.TestCase):
+    @parameterized.expand(
+        [
+            ({"a": 1}, ("a",), 1),
+            ({"a": {"b": 2}}, ("a",), {"b": 2}),
+            ({"a": {"b": 2}}, ("a", "b"), 2),
+        ]
+    )
+    def test_access_nested_map(
+        self, nested_map: Mapping, path: Sequence, expected: Any
+    ):
+        """Test access_nested_map"""
+        self.assertEqual(access_nested_map(nested_map, path), expected)

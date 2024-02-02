@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""UNIT & INTEGRATION TESTS MODULE"""
+"""UNIT & INTEGRATION TESTS MODULE
+"""
 from unittest import TestCase, mock
 from parameterized import parameterized
 from typing import Mapping, Sequence, Any
@@ -25,7 +26,8 @@ class TestAccessNestedMap(TestCase):
                                path: Sequence,
                                expected: Any
                                ) -> None:
-        """tests for access_nested_map method """
+        """tests for access_nested_map method
+        """
         self.assertEqual(accessMap(nested_map, path), expected)
 
     @parameterized.expand([
@@ -76,6 +78,7 @@ class TestMemoize(TestCase):
         """test method for  utils.memoize method
         """
         class TestClass:
+            """ test class with 2 methods"""
             def a_method(self):
                 """this method cachreturns 42"""
                 return 42

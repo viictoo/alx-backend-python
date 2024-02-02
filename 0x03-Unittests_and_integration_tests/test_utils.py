@@ -36,7 +36,7 @@ class TestAccessNestedMap(TestCase):
                                          name: str,
                                          nested_map: Mapping,
                                          path: Sequence,
-                                         expected: Exception
+                                         expected: Any
                                          ) -> None:
         """tests for access_nested_map function method"""
         self.assertRaises(expected, accessMap, nested_map, path)

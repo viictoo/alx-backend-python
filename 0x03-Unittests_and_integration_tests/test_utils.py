@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-"""UNIT & INTEGRATION TESTS MODULE
-"""
 from unittest import TestCase, mock
 from parameterized import parameterized
 from typing import Mapping, Sequence, Any
@@ -44,21 +42,27 @@ class TestAccessNestedMap(TestCase):
             accessMap(nested_map, path)
 
 
-class TestGetJson(unittest.TestCase):
-    """Test get_json"""
+class TestGetJson(TestCase):
+    """unittests for the access nested map function
 
-    @parameterized.expand(
-        [
-            ("http://example.com", {"payload": True}),
-            ("http://holberton.io", {"payload": False}),
-        ]
-    )
-    @patch("utils.requests.get")
-    def test_get_json(self, test_url: str, test_payload: dict, mock_get: Any):
-        """Test get_json"""
-        mock_get.return_value.json.return_value = test_payload
-        self.assertEqual(get_json(test_url), test_payload)
-        mock_get.assert_called_once_with(test_url)
+    Args:
+        TestCase (class): A class whose instances are single test cases.
+    """
+    @parameterized.expand([
+        ("test_example", "http://example.com", {"payload": True}),
+        ("test_holberton", "http://holberton.io", {"payload": False}),
+    ])
+    @mock.patch("utils.requests.get")
+    def test_get_json(self,
+                      name: str,
+                      url: str,
+                      test_response: dict,
+                      mock_requests: Any
+                      ) -> None:
+        """assert that the get json method calls the url presented"""
+        mock_requests.return_value.json.return_value = test_response
+        self.assertEqual(get_json(url), test_response)
+        mock_requests.assert_called_once_with(url)
 
 
 class TestMemoize(TestCase):

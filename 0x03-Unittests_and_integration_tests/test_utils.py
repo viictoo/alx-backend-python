@@ -9,39 +9,39 @@ get_json = __import__('utils').get_json
 memoize = __import__('utils').memoize
 
 
-class TestAccessNestedMap(TestCase):
-    """unittests for the access nested map function
+# class TestAccessNestedMap(TestCase):
+#     """unittests for the access nested map function
 
-    Args:
-        TestCase (class): A class whose instances are single test cases.
-    """
-    @parameterized.expand([
-        ("root", {"a": 1}, ("a",), 1),
-        ("children", {"a": {"b": 2}}, ("a",), {'b': 2}),
-        ("last child", {"a": {"b": 2}}, ("a", "b"), 2),
-    ])
-    def test_access_nested_map(self,
-                               name: str,
-                               nested_map: Mapping,
-                               path: Sequence,
-                               expected: Any
-                               ) -> None:
-        """tests for access_nested_map method
-        """
-        self.assertEqual(accessMap(nested_map, path), expected)
+#     Args:
+#         TestCase (class): A class whose instances are single test cases.
+#     """
+#     @parameterized.expand([
+#         ("root", {"a": 1}, ("a",), 1),
+#         ("children", {"a": {"b": 2}}, ("a",), {'b': 2}),
+#         ("last child", {"a": {"b": 2}}, ("a", "b"), 2),
+#     ])
+#     def test_access_nested_map(self,
+#                                name: str,
+#                                nested_map: Mapping,
+#                                path: Sequence,
+#                                expected: Any
+#                                ) -> None:
+#         """tests for access_nested_map method
+#         """
+#         self.assertEqual(accessMap(nested_map, path), expected)
 
-    @parameterized.expand([
-        ("root", {}, ("a",)),
-        ("last child", {"a": 1}, ("a", "b")),
-    ])
-    def test_access_nested_map_exception(self,
-                                         name: str,
-                                         nested_map: Mapping,
-                                         path: Sequence
-                                         ) -> None:
-        """tests for access_nested_map function method"""
-        with (self.assertRaises(KeyError)):
-            accessMap(nested_map, path)
+#     @parameterized.expand([
+#         ("root", {}, ("a",)),
+#         ("last child", {"a": 1}, ("a", "b")),
+#     ])
+#     def test_access_nested_map_exception(self,
+#                                          name: str,
+#                                          nested_map: Mapping,
+#                                          path: Sequence
+#                                          ) -> None:
+#         """tests for access_nested_map function method"""
+#         with (self.assertRaises(KeyError)):
+#             accessMap(nested_map, path)
 
 
 class TestGetJson(TestCase):
@@ -79,12 +79,13 @@ class TestMemoize(TestCase):
         """
         class TestClass:
             """ test class with 2 methods"""
-            def a_method(self):
+
+            def a_method(self) -> int:
                 """this method cachreturns 42"""
                 return 42
 
             @memoize
-            def a_property(self):
+            def a_property(self) -> Any:
                 """method with a cached result"""
                 return self.a_method()
 

@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""
+UNIT & INTEGRATION TESTS MODULE
+UNIT & INTEGRATION TESTS MODULE
+UNIT & INTEGRATION TESTS MODULE
+"""
 from unittest import TestCase, mock
 from parameterized import parameterized
 from typing import Mapping, Sequence, Any

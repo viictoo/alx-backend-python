@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """UNIT & INTEGRATION TESTS MODULE"""
 from unittest import TestCase, mock
 from parameterized import parameterized

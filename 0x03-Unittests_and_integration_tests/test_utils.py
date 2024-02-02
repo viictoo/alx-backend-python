@@ -1,53 +1,43 @@
 #!/usr/bin/env python3
+"""UNIT & INTEGRATION TESTS MODULE FOR UTILS
 """
-Test suite for utils.py
-"""
-
-import unittest
-from unittest.mock import patch
-from typing import Mapping, Sequence, Any
 
 from parameterized import parameterized
-
+from typing import Mapping, Sequence, Any
+from unittest import TestCase, mock
 from utils import access_nested_map, get_json, memoize
 
 
-class TestAccessNestedMap(unittest.TestCase):
+class TestAccessNestedMap(TestCase):
     """unittests for the access nested map function
 
     Args:
         TestCase (class): A class whose instances are single test cases.
     """
     @parameterized.expand([
-        ("root", {"a": 1}, ("a",), 1),
-        ("children", {"a": {"b": 2}}, ("a",), {'b': 2}),
-        ("last child", {"a": {"b": 2}}, ("a", "b"), 2),
+        ({"a": 1}, ("a",), 1),
+        ({"a": {"b": 2}}, ("a",), {'b': 2}),
+        ({"a": {"b": 2}}, ("a", "b"), 2),
     ])
-    def test_access_nested_map(self,
-                               name: str,
-                               nested_map: Mapping,
-                               path: Sequence,
-                               expected: Any
-                               ) -> Any:
-        """tests for access_nested_map method
-        """
-        self.assertEqual(accessMap(nested_map, path), expected)
+    def test_access_nested_map(
+        self, nested_map: Mapping, path: Sequence, expected: Any
+    ):
+        """tests for access_nested_map method"""
+        self.assertEqual(access_nested_map(nested_map, path), expected)
 
     @parameterized.expand([
         ("root", {}, ("a",)),
         ("last child", {"a": 1}, ("a", "b")),
     ])
-    def test_access_nested_map_exception(self,
-                                         name: str,
-                                         nested_map: Mapping,
-                                         path: Sequence
-                                         ) -> Any:
+    def test_access_nested_map_exception(
+        self, name: str, nested_map: Mapping, path: Sequence
+    ) -> None:
         """tests for access_nested_map function method"""
         with (self.assertRaises(KeyError)):
-            accessMap(nested_map, path)
+            access_nested_map(nested_map, path)
 
 
-# class TestGetJson(unittest.TestCase):
+# class TestGetJson(TestCase):
 #     """unittests for the access nested map function
 
 #     Args:
@@ -96,5 +86,5 @@ class TestAccessNestedMap(unittest.TestCase):
 #             test_class = TestClass()
 #             for _ in range(7):
 #                 test_class.a_property
-#             # self.assertEqual(test_class.a_property(), 42) || returns mock id
+#             # self.assertEqual(test_class.a_property(), 42)|returns mock id
 #             mock_method.assert_called_once()

@@ -25,6 +25,7 @@ class TestAccessNestedMap(TestCase):
                                path: Sequence,
                                expected: Any
                                ) -> None:
+        """tests for access_nested_map method """
         self.assertEqual(accessMap(nested_map, path), expected)
 
     @parameterized.expand([
@@ -37,6 +38,7 @@ class TestAccessNestedMap(TestCase):
                                          path: Sequence,
                                          expected: Exception
                                          ) -> None:
+        """tests for access_nested_map function method"""
         self.assertRaises(expected, accessMap, nested_map, path)
 
 

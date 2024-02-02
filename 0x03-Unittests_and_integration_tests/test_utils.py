@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-UNIT & INTEGRATION TESTS MODULE
-UNIT & INTEGRATION TESTS MODULE
-UNIT & INTEGRATION TESTS MODULE
+Test suite for utils.py
 """
-from unittest import TestCase, mock
-from parameterized import parameterized
+
+import unittest
+from unittest.mock import patch
 from typing import Mapping, Sequence, Any
-accessMap = __import__('utils').access_nested_map
-get_json = __import__('utils').get_json
-memoize = __import__('utils').memoize
+
+from parameterized import parameterized
+
+from utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):

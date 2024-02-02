@@ -29,17 +29,17 @@ class TestAccessNestedMap(TestCase):
         self.assertEqual(accessMap(nested_map, path), expected)
 
     @parameterized.expand([
-        ("root", {}, ("a",), KeyError),
-        ("last child", {"a": 1}, ("a", "b"), KeyError),
+        ("root", {}, ("a",)),
+        ("last child", {"a": 1}, ("a", "b")),
     ])
     def test_access_nested_map_exception(self,
                                          name: str,
                                          nested_map: Mapping,
-                                         path: Sequence,
-                                         expected: Any
+                                         path: Sequence
                                          ) -> None:
         """tests for access_nested_map function method"""
-        self.assertRaises(expected, accessMap, nested_map, path)
+        with(self.assertRaises(KeyError)):
+            accessMap(nested_map, path)
 
 
 class TestGetJson(TestCase):
@@ -57,7 +57,8 @@ class TestGetJson(TestCase):
                       name: str,
                       url: str,
                       test_response: dict,
-                      mock_requests: Any) -> None:
+                      mock_requests: Any
+                      ) -> None:
         """assert that the get json method calls the url presented"""
         mock_requests.return_value.json.return_value = test_response
         self.assertEqual(get_json(url), test_response)

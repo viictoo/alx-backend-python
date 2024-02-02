@@ -9,52 +9,56 @@ get_json = __import__('utils').get_json
 memoize = __import__('utils').memoize
 
 
-class TestAccessNestedMap(unittest.TestCase):
-    """ Class for testing Nested Map function """
-    # unittest does not support test decorators,
-    # only tests created with @parameterized.expand will be executed
-    @parameterized.expand([
-        ({"a": 1}, ("a",), 1),
-        ({"a": {"b": 2}}, ("a",), {'b': 2}),
-        ({"a": {"b": 2}}, ("a", "b"), 2)
-    ])
-    def test_access_nested_map(self, map, path, expected_output):
-        """ Test method returns correct output """
-        real_output = access_nested_map(map, path)
-        self.assertEqual(real_output, expected_output)
-
-    @parameterized.expand([
-        ({}, ("a",), 'a'),
-        ({"a": 1}, ("a", "b"), 'b')
-    ])
-    def test_access_nested_map_exception(self, map, path, wrong_output):
-        """ Test method raises correct exception """
-        with self.assertRaises(KeyError) as e:
-            access_nested_map(map, path)
-            self.assertEqual(wrong_output, e.exception)
-
-
-class TestGetJson(TestCase):
+class TestAccessNestedMap(TestCase):
     """unittests for the access nested map function
 
     Args:
         TestCase (class): A class whose instances are single test cases.
     """
     @parameterized.expand([
-        ("test_example", "http://example.com", {"payload": True}),
-        ("test_holberton", "http://holberton.io", {"payload": False}),
+        ("root", {"a": 1}, ("a",), 1),
+        ("children", {"a": {"b": 2}}, ("a",), {'b': 2}),
+        ("last child", {"a": {"b": 2}}, ("a", "b"), 2),
     ])
-    @mock.patch("utils.requests.get")
-    def test_get_json(self,
-                      name: str,
-                      url: str,
-                      test_response: dict,
-                      mock_requests: Any
-                      ) -> None:
-        """assert that the get json method calls the url presented"""
-        mock_requests.return_value.json.return_value = test_response
-        self.assertEqual(get_json(url), test_response)
-        mock_requests.assert_called_once_with(url)
+    def test_access_nested_map(self,
+                               name: str,
+                               nested_map: Mapping,
+                               path: Sequence,
+                               expected: Any
+                               ) -> None:
+        """tests for access_nested_map method
+        """
+        self.assertEqual(accessMap(nested_map, path), expected)
+
+    @parameterized.expand([
+        ("root", {}, ("a",)),
+        ("last child", {"a": 1}, ("a", "b")),
+    ])
+    def test_access_nested_map_exception(self,
+                                         name: str,
+                                         nested_map: Mapping,
+                                         path: Sequence
+                                         ) -> None:
+        """tests for access_nested_map function method"""
+        with (self.assertRaises(KeyError)):
+            accessMap(nested_map, path)
+
+
+class TestGetJson(unittest.TestCase):
+    """Test get_json"""
+
+    @parameterized.expand(
+        [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False}),
+        ]
+    )
+    @patch("utils.requests.get")
+    def test_get_json(self, test_url: str, test_payload: dict, mock_get: Any):
+        """Test get_json"""
+        mock_get.return_value.json.return_value = test_payload
+        self.assertEqual(get_json(test_url), test_payload)
+        mock_get.assert_called_once_with(test_url)
 
 
 class TestMemoize(TestCase):

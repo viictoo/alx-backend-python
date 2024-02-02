@@ -40,7 +40,7 @@ class TestAccessNestedMap(TestCase):
                                          path: Sequence
                                          ) -> None:
         """tests for access_nested_map function method"""
-        with(self.assertRaises(KeyError)):
+        with (self.assertRaises(KeyError)):
             accessMap(nested_map, path)
 
 
@@ -67,30 +67,30 @@ class TestGetJson(TestCase):
         mock_requests.assert_called_once_with(url)
 
 
-# class TestMemoize(TestCase):
-#     """unittests for the memoize function
+class TestMemoize(TestCase):
+    """unittests for the memoize function
 
-#     Args:
-#         TestCase (class): A class whose functions are single test cases
-#     """
+    Args:
+        TestCase (class): A class whose functions are single test cases
+    """
 
-#     def test_memoize(self):
-#         """test method for  utils.memoize method
-#         """
-#         class TestClass:
-#             """ test class with 2 methods"""
-#             def a_method(self):
-#                 """this method cachreturns 42"""
-#                 return 42
+    def test_memoize(self):
+        """test method for  utils.memoize method
+        """
+        class TestClass:
+            """ test class with 2 methods"""
+            def a_method(self):
+                """this method cachreturns 42"""
+                return 42
 
-#             @memoize
-#             def a_property(self):
-#                 """method with a cached result"""
-#                 return self.a_method()
+            @memoize
+            def a_property(self):
+                """method with a cached result"""
+                return self.a_method()
 
-#         with mock.patch.object(TestClass, "a_method") as mock_method:
-#             test_class = TestClass()
-#             for _ in range(7):
-#                 test_class.a_property
-#             # self.assertEqual(test_class.a_property(), 42) || returns mock id
-#             mock_method.assert_called_once()
+        with mock.patch.object(TestClass, "a_method") as mock_method:
+            test_class = TestClass()
+            for _ in range(7):
+                test_class.a_property
+            # self.assertEqual(test_class.a_property(), 42) || returns mock id
+            mock_method.assert_called_once()

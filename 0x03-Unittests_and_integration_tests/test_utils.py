@@ -44,12 +44,12 @@ class TestGetJson(TestCase):
         TestCase (class): A class whose instances are single test cases.
     """
     @parameterized.expand([
-        ("test_example", "http://example.com", {"payload": True}),
-        ("test_holberton", "http://holberton.io", {"payload": False}),
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False}),
     ])
     @mock.patch("utils.requests.get")
     def test_get_json(
-        self, name: str, url: str, test_response: dict, mock_requests: Any) -> None:
+            self, url: str, test_response: dict, mock_requests: Any) -> None:
         """assert that the get json method calls the url presented"""
         mock_requests.return_value.json.return_value = test_response
         self.assertEqual(get_json(url), test_response)

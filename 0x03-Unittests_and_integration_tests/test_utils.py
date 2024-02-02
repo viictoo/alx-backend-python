@@ -31,7 +31,7 @@ class TestAccessNestedMap(TestCase):
     ])
     def test_access_nested_map_exception(
         self, name: str, nested_map: Mapping, path: Sequence
-    ):
+    ) -> None:
         """tests for access_nested_map function method"""
         with (self.assertRaises(KeyError)):
             access_nested_map(nested_map, path)
@@ -56,7 +56,7 @@ class TestGetJson(TestCase):
         mock_requests.assert_called_once_with(url)
 
 
-class TestMemoize(unittest.TestCase):
+class TestMemoize(TestCase):
     """unittests for the memoize function
 
     Args:

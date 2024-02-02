@@ -8,39 +8,30 @@ accessMap = __import__('utils').access_nested_map
 get_json = __import__('utils').get_json
 memoize = __import__('utils').memoize
 
-class TestAccessNestedMap(TestCase):
-    """unittests for the access nested map function
 
-    Args:
-        TestCase (class): A class whose instances are single test cases.
-    """
+class TestAccessNestedMap(unittest.TestCase):
+    """ Class for testing Nested Map function """
+    # unittest does not support test decorators,
+    # only tests created with @parameterized.expand will be executed
     @parameterized.expand([
-        ("root", {"a": 1}, ("a",), 1),
-        ("children", {"a": {"b": 2}}, ("a",), {'b': 2}),
-        ("last child", {"a": {"b": 2}}, ("a", "b"), 2),
+        ({"a": 1}, ("a",), 1),
+        ({"a": {"b": 2}}, ("a",), {'b': 2}),
+        ({"a": {"b": 2}}, ("a", "b"), 2)
     ])
-    def test_access_nested_map(self,
-                               name: str,
-                               nested_map: Mapping,
-                               path: Sequence,
-                               expected: Any
-                               ) -> None:
-        """tests for access_nested_map method
-        """
-        self.assertEqual(accessMap(nested_map, path), expected)
+    def test_access_nested_map(self, map, path, expected_output):
+        """ Test method returns correct output """
+        real_output = access_nested_map(map, path)
+        self.assertEqual(real_output, expected_output)
 
     @parameterized.expand([
-        ("root", {}, ("a",)),
-        ("last child", {"a": 1}, ("a", "b")),
+        ({}, ("a",), 'a'),
+        ({"a": 1}, ("a", "b"), 'b')
     ])
-    def test_access_nested_map_exception(self,
-                                         name: str,
-                                         nested_map: Mapping,
-                                         path: Sequence
-                                         ) -> None:
-        """tests for access_nested_map function method"""
-        with (self.assertRaises(KeyError)):
-            accessMap(nested_map, path)
+    def test_access_nested_map_exception(self, map, path, wrong_output):
+        """ Test method raises correct exception """
+        with self.assertRaises(KeyError) as e:
+            access_nested_map(map, path)
+            self.assertEqual(wrong_output, e.exception)
 
 
 class TestGetJson(TestCase):

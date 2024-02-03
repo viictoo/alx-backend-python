@@ -40,7 +40,6 @@ class TestGithubOrgClient(TestCase):
         # mock_org.assert_any_call(GithubOrgClient.ORG_URL.format(org=mock_org))
 
 
-
 @parameterized.expand([
     ([{"name": "test_repo1", "license": {"key": "mani"}}],),
     ([{"name": "test_repo2", "license": {"key": "atu"}}],),
@@ -54,7 +53,8 @@ def test_public_repos(self, names, mock_json):
     mock_json.return_value = test_org
 
     # Mock the repos_payload method
-    with mock.patch.object(GithubOrgClient, 'repos_payload', return_value=names):
+    with mock.patch.object(
+            GithubOrgClient, 'repos_payload', return_value=names):
         client = GithubOrgClient("test_org")
         test_repo = client.public_repos()
 
@@ -65,14 +65,13 @@ def test_public_repos(self, names, mock_json):
     # Assert that get_json was called once
     mock_json.assert_called_once()
 
-
     @parameterized.expand([
-        ({"license": {"key": "my_license"}},"my_license", True),
+        ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
     ])
     def test_has_license(self, repo_url, key, expected):
         """ test that GithubOrgClient.test_has_license
             returns the expected result based on the mocked result
         """
-        response = GithubOrgClient.has_license(repo_url,key)
+        response = GithubOrgClient.has_license(repo_url, key)
         self.assertEqual(response, expected)

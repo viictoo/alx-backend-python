@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """UNIT & INTEGRATION TESTS MODULE"""
 
 from client import GithubOrgClient, get_json

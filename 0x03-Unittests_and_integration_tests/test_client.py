@@ -43,7 +43,7 @@ class TestGithubOrgClient(TestCase):
         ([{"name": "test_repo1", "license": {"key": "mani"}}],),
         ([{"name": "test_repo2", "license": {"key": "atu"}}],),
     ])
-    @mock.patch('client.get_json', new_callable=mock.PropertyMock)
+    @mock.patch('client._public_repos_url', new_callable=mock.PropertyMock)
     def test_public_repos(self, names, mock_json):
         """ test that GithubOrgClient.get_json
             returns the expected result based on the mocked payload

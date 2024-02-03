@@ -38,3 +38,41 @@ class TestGithubOrgClient(TestCase):
         self.assertEqual(test_url, mock_org.return_value.get('repos_url'))
         mock_org.assert_called_once()
         # mock_org.assert_any_call(GithubOrgClient.ORG_URL.format(org=mock_org))
+
+
+
+@parameterized.expand([
+    ([{"name": "test_repo1", "license": {"key": "mani"}}],),
+    ([{"name": "test_repo2", "license": {"key": "atu"}}],),
+])
+@mock.patch('client.get_json', new_callable=mock.PropertyMock)
+def test_public_repos(self, names, mock_json):
+    """ test that GithubOrgClient.get_json
+        returns the expected result based on the mocked payload
+    """
+    test_org = {"repos_url": "mock_url"}
+    mock_json.return_value = test_org
+
+    # Mock the repos_payload method
+    with mock.patch.object(GithubOrgClient, 'repos_payload', return_value=names):
+        client = GithubOrgClient("test_org")
+        test_repo = client.public_repos()
+
+        # Extract the repo names from the names list
+        check = [i.get("name") for i in names]
+        self.assertEqual(test_repo, check)
+
+    # Assert that get_json was called once
+    mock_json.assert_called_once()
+
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}},"my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(self, repo_url, key, expected):
+        """ test that GithubOrgClient.test_has_license
+            returns the expected result based on the mocked result
+        """
+        response = GithubOrgClient.has_license(repo_url,key)
+        self.assertEqual(response, expected)

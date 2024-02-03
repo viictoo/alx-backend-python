@@ -53,7 +53,8 @@ class TestGithubOrgClient(TestCase):
 
         # Mock the repos_payload method
         with mock.patch.object(
-                GithubOrgClient, '_public_repos_url', return_value=names):
+                GithubOrgClient, '_public_repos_url', return_value=names,
+                new_callable=mock.PropertyMock):
             client = GithubOrgClient("test_org")
             test_repo = client.public_repos()
 

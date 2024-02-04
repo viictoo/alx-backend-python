@@ -2,7 +2,8 @@
 """UNIT & INTEGRATION TESTS MODULE"""
 
 from client import GithubOrgClient, get_json
-from parameterized import parameterized
+from fixtures import TEST_PAYLOAD
+from parameterized import parameterized, parameterized_class
 from unittest import TestCase, mock
 
 
@@ -37,7 +38,8 @@ class TestGithubOrgClient(TestCase):
         test_url = test_org._public_repos_url
         self.assertEqual(test_url, mock_org.return_value.get('repos_url'))
         mock_org.assert_called_once()
-        # mock_org.assert_any_call(GithubOrgClient.ORG_URL.format(org=mock_org))
+        # mock_org.assert_any_call(
+        # GithubOrgClient.ORG_URL.format(org=mock_org))
 
     @parameterized.expand([
         ([{"name": "test_repo1", "license": {"key": "mani"}}],),
@@ -64,6 +66,7 @@ class TestGithubOrgClient(TestCase):
 
         # Assert that get_json was called once
         mock_json.assert_called_once()
+        mock_json.assert_called_once()
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
@@ -75,3 +78,54 @@ class TestGithubOrgClient(TestCase):
         """
         response = GithubOrgClient.has_license(repo_url, key)
         self.assertEqual(response, expected)
+
+
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(TestCase):
+    """ Integration test: fixtures:
+        mock code that sends external requests
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        """mock requests.get to return example payloads found in the fixtures
+        """
+
+        config = {'return_value.json.side_effect':
+                  [
+                      cls.org_payload, cls.repos_payload,
+                      cls.org_payload, cls.repos_payload
+                  ]
+                  }
+        cls.get_patcher = mock.patch('requests.get', **config)
+
+        cls.mock = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        """class method to stop the patcher"""
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """ method to test GithubOrgClient.public_repos"""
+        alx_test_cls = GithubOrgClient("lax")
+        self.assertEqual(alx_test_cls.org, self.org_payload)
+        self.assertEqual(alx_test_cls.repos_payload, self.repos_payload)
+        self.assertEqual(alx_test_cls.public_repos(), self.expected_repos)
+        self.assertEqual(alx_test_cls.public_repos("XLICENSE"), [])
+        self.mock.assert_called()
+
+    def test_public_repos_with_license(self):
+        """ method to test test the public_repos with the argument
+            license="apache-2.0" and make sure the result matches the expected
+            value from the fixtures
+        """
+        alx_test_cls = GithubOrgClient("lax")
+        self.assertEqual(alx_test_cls.public_repos(), self.expected_repos)
+        self.assertEqual(alx_test_cls.public_repos("XLICENSE"), [])
+        self.assertEqual(
+            alx_test_cls.public_repos("apache-2.0"), self.apache2_repos)
+        self.mock.assert_called()

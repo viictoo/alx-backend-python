@@ -46,7 +46,7 @@ class TestGithubOrgClient(TestCase):
         ])
     def test_public_repos(self, mock_get_json):
         """Unit test for clients"""
-        with patch(
+        with mock.patch(
             'client.GithubOrgClient._public_repos_url',
             new_callable=mock.PropertyMock)\
                 as mock_repos_url:

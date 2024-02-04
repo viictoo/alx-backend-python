@@ -6,7 +6,7 @@ from fixtures import TEST_PAYLOAD
 from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, PropertyMock
 import unittest
-from unittest import mock
+# from unittest import mock
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ('google'),
         ('apple'),
     ])
-    @mock.patch("client.get_json", return_value={"payload": True})
+    @patch("client.get_json", return_value={"payload": True})
     def test_org(self, org, mock_org):
         """test that GithubClient.org returns the correct value
         """
@@ -28,7 +28,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_org.assert_called_with(f"{ORG_URL}{mock_org}")
         mock_org.assert_any_call(GithubOrgClient.ORG_URL.format(org=mock_org))
 
-    @mock.patch.object(GithubOrgClient, 'org', new_callable=mock.PropertyMock)
+    @patch.object(GithubOrgClient, 'org', new_callable=PropertyMock)
     def test_public_repos_url(self, mock_org):
         """ test that GithubOrgClient._public_repos_url
             returns the expected result based on the mocked payload
@@ -44,19 +44,19 @@ class TestGithubOrgClient(unittest.TestCase):
         # GithubOrgClient.ORG_URL.format(org=mock_org))
 
     @patch("client.get_json")
-    def test_public_repos(self, mocked_get_json):
-        """Test the public_repos method of GithubOrgClient."""
-        test_payload = [
-                {'name': 'name1'},
-                {'name': 'name2'}
+    def test_public_repos(self, mock_json):
+        """ unit-test GithubOrgClient.public_repos"""
+        test_data = [
+                {'name': 'nema'}
                 ]
-        mocked_get_json.return_value = test_payload
+        mock_json.return_value = test_data
         with patch('client.GithubOrgClient._public_repos_url',
-                   new_callable=PropertyMock) as mocked_property:
-            mocked_property.return_value = 'za url'
-            name_list = GithubOrgClient('random name').public_repos()
-        self.assertEqual(['name1', 'name2'], name_list)
-        mocked_get_json.assert_called_once_with('za url')
+                   new_callable=PropertyMock) as patched:
+            patched.return_value = 'url'
+            name_list = GithubOrgClient('org').public_repos()
+        self.assertEqual(['name1'], name_list)
+        mock_json.assert_called_once()
+        mock_json.assert_called_once_with('url')
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
@@ -90,7 +90,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                       cls.org_payload, cls.repos_payload
                   ]
                   }
-        cls.get_patcher = mock.patch('requests.get', **config)
+        cls.get_patcher = patch('requests.get', **config)
 
         cls.mock = cls.get_patcher.start()
 

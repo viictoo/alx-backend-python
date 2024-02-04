@@ -41,32 +41,22 @@ class TestGithubOrgClient(TestCase):
         # mock_org.assert_any_call(
         # GithubOrgClient.ORG_URL.format(org=mock_org))
 
-    @parameterized.expand([
-        ([{"name": "test_repo1", "license": {"key": "mani"}}],),
-        ([{"name": "test_repo2", "license": {"key": "atu"}}],),
-    ])
-    @mock.patch('client.get_json', new_callable=mock.PropertyMock)
-    def test_public_repos(self, names, mock_json):
-        """ test that GithubOrgClient.get_json
-            returns the expected result based on the mocked payload
-        """
-        test_org = {"repos_url": "mock_url"}
-        mock_json.return_value = names
-
-        # Mock the repos_payload method
-        with mock.patch.object(
-                GithubOrgClient, '_public_repos_url', return_value=names,
-                new_callable=mock.PropertyMock):
-            client = GithubOrgClient("test_org")
-            test_repo = client.public_repos()
-
-            # Extract the repo names from the names list
-            check = [i.get("name") for i in names]
-            self.assertEqual(test_repo, check)
-
-        # Assert that get_json was called once
-        mock_json.assert_called_once()
-        mock_json.assert_called_once()
+    @mock.patch('client.get_json', return_value=[
+        {"name": "rep1"}, {"name": "rep2"}
+        ])
+    def test_public_repos(self, mock_get_json):
+        """Unit test for clients"""
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            new_callable=mock.PropertyMock)\
+                as mock_repos_url:
+            mock_repos_url.return_value = GithubOrgClient.ORG_URL
+            client = GithubOrgClient('org_name')
+            repos = client.public_repos()
+            self.assertEqual(repos, ['rep1', 'rep2'])
+            mock_get_json.assert_called_once_with(
+                GithubOrgClient.ORG_URL)
+            mock_repos_url.assert_called_once()
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),

@@ -4,10 +4,11 @@
 from client import GithubOrgClient, get_json
 from fixtures import TEST_PAYLOAD
 from parameterized import parameterized, parameterized_class
-from unittest import TestCase, mock
+import unittest
+from unittest import mock
 
 
-class TestGithubOrgClient(TestCase):
+class TestGithubOrgClient(unittest.TestCase):
     """Tests for the GithubOrgClient class"""
     @parameterized.expand([
         ('google'),
@@ -74,7 +75,7 @@ class TestGithubOrgClient(TestCase):
     ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
     TEST_PAYLOAD
 )
-class TestIntegrationGithubOrgClient(TestCase):
+class TestIntegrationGithubOrgClient(unittest.TestCase):
     """ Integration test: fixtures:
         mock code that sends external requests
     """

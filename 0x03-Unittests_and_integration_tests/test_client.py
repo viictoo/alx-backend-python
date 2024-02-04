@@ -54,7 +54,7 @@ class TestGithubOrgClient(unittest.TestCase):
                    new_callable=PropertyMock) as patched:
             patched.return_value = 'url'
             name_list = GithubOrgClient('org').public_repos()
-        self.assertEqual(['name1'], name_list)
+        self.assertEqual(['nema'], name_list)
         mock_json.assert_called_once()
         mock_json.assert_called_once_with('url')
 

@@ -4,6 +4,7 @@
 from client import GithubOrgClient, get_json
 from fixtures import TEST_PAYLOAD
 from parameterized import parameterized, parameterized_class
+from unittest.mock import patch, PropertyMock
 import unittest
 from unittest import mock
 
@@ -42,22 +43,20 @@ class TestGithubOrgClient(unittest.TestCase):
         # mock_org.assert_any_call(
         # GithubOrgClient.ORG_URL.format(org=mock_org))
 
-    @mock.patch('client.get_json', return_value=[
-        {"name": "rep1"}, {"name": "rep2"}
-        ])
-    def test_public_repos(self, mock_get_json):
-        """Unit test for clients"""
-        with mock.patch(
-            'client.GithubOrgClient._public_repos_url',
-            new_callable=mock.PropertyMock)\
-                as mock_repos_url:
-            mock_repos_url.return_value = GithubOrgClient.ORG_URL
-            client = GithubOrgClient('org_name')
-            repos = client.public_repos()
-            self.assertEqual(repos, ['rep1', 'rep2'])
-            mock_get_json.assert_called_once_with(
-                GithubOrgClient.ORG_URL)
-            mock_repos_url.assert_called_once()
+    @patch("client.get_json")
+    def test_public_repos(self, mocked_get_json):
+        """Test the public_repos method of GithubOrgClient."""
+        test_payload = [
+                {'name': 'name1'},
+                {'name': 'name2'}
+                ]
+        mocked_get_json.return_value = test_payload
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock) as mocked_property:
+            mocked_property.return_value = 'za url'
+            name_list = GithubOrgClient('random name').public_repos()
+        self.assertEqual(['name1', 'name2'], name_list)
+        mocked_get_json.assert_called_once_with('za url')
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),

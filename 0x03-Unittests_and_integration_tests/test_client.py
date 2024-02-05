@@ -8,7 +8,7 @@ from parameterized import parameterized
 from client import GithubOrgClient, get_json
 
 
-class TestGithubClient(unittest.TestCase):
+class TestGithubOrgClient(unittest.TestCase):
     '''
     This is a test for the githuborg client method.
     To check if it has the correct return value.
